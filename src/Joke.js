@@ -1,27 +1,45 @@
-import React from "react";
+import React, { Component } from "react";
 import "./Joke.css";
 
-function Joke({ vote, votes, text, id }) {
-  const upVote = () => vote(id, +1);
-  const downVote = () => vote(id, -1);
+class Joke extends Component {
+  constructor(props) {
+    super(props);
+    this.handleUpVote = this.handleUpVote.bind(this);
+    this.handleDownVote = this.handleDownVote.bind(this);
+    this.handleToggleLock = this.handleToggleLock.bind(this);
+  }
 
-  return (
-    <div className="Joke">
-      <div className="Joke-votearea">
-        <button onClick={upVote}>
-          <i className="fas fa-thumbs-up" />
-        </button>
+  handleUpVote() {
+    this.props.vote(this.props.id, +1);
+  }
 
-        <button onClick={downVote}>
-          <i className="fas fa-thumbs-down" />
-        </button>
+  handleDownVote() {
+    this.props.vote(this.props.id, -1);
+  }
 
-        {votes}
+  handleToggleLock() {
+    this.props.toggleLock(this.props.id);
+  }
+
+  render() {
+    return (
+      <div className={`Joke ${this.props.locked ? "Joke-locked" : ""}`}>
+        <div className="Joke-votearea">
+          <button onClick={this.handleUpVote}>
+            <i className="fas fa-thumbs-up" />
+          </button>
+          <button onClick={this.handleDownVote}>
+            <i className="fas fa-thumbs-down"></i>
+          </button>
+          <button onClick={this.handleToggleLock}>
+            <i className={`fas fa-${this.props.locked ? "unlock" : "lock"}`} />
+          </button>
+          {this.props.votes}
+        </div>
+        <div className="Joke-text">{this.props.text}</div>
       </div>
-
-      <div className="Joke-text">{text}</div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Joke;
